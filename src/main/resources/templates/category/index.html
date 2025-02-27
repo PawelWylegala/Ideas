@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="template :: head(title = '100 ideas – Admin')/>-->
+<head th:replace="~{template :: head(title = '100 ideas')}"></head>
+<body>
+<th:block th:replace="~{template :: header}"/>
+<ul>
+    <li th:each="category : ${categories}" th:text="${category.name}"></li>
+</ul>
+
+<th:block th:replace="~{template :: footer}"/>
+</body>
+</html>
