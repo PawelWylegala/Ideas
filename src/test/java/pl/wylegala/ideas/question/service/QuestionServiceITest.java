@@ -219,6 +219,7 @@ class QuestionServiceITest {
         questionRepository.saveAll(List.of(question1, question2, question3));
         //when
         Page<Question> byQuery = questionService.findByQuery(query, Pageable.unpaged());
+        System.out.println(byQuery.toString());
 
         //then
 

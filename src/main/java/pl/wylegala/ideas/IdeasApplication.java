@@ -6,19 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@SpringBootApplication(exclude = {com.vaadin.flow.spring.SpringBootAutoConfiguration.class})
-@RestController
+@SpringBootApplication
 
 public class IdeasApplication {
 
-
-	public IdeasApplication() {
-	}
-
-	@GetMapping("/test")
-	public String test() {
-		return "" + System.currentTimeMillis();
-	}
 
 	public static void
 	main(String[] args) {
