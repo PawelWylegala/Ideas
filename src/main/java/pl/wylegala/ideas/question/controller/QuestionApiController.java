@@ -3,6 +3,7 @@ package pl.wylegala.ideas.question.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.wylegala.ideas.question.dto.QuestionApiDto;
 import pl.wylegala.ideas.question.service.QuestionService;
 import pl.wylegala.ideas.question.domein.model.Question;
 
@@ -21,8 +22,9 @@ public class QuestionApiController {
     }
 
     @GetMapping
-    List<Question> getQuestions() {
-        return questionService.getQuestions();
+    List<QuestionApiDto> getQuestions() {
+
+        return questionService.getQuestionsForApi();
     }
 
     @GetMapping("{id}")

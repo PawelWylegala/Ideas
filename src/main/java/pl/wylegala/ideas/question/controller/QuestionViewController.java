@@ -30,7 +30,6 @@ public class QuestionViewController extends IdeasCommonViewController {
     private final QuestionService questionService;
     private final AnswerService answerService;
     private final IdeasConfiguration ideasConfiguration;
-    private final CategoryService categoryService;
     @GetMapping
     public String indexView(Model model){
 

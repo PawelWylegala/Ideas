@@ -8,32 +8,39 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.wylegala.ideas.category.domain.model.Category;
 import pl.wylegala.ideas.category.domain.repository.CategoryRepository;
 import pl.wylegala.ideas.common.dto.StatisticsDto;
 import pl.wylegala.ideas.question.domein.model.Question;
 import pl.wylegala.ideas.question.domein.repository.QuestionRepository;
+import pl.wylegala.ideas.question.dto.QuestionApiDto;
 import pl.wylegala.ideas.question.dto.QuestionDto;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final CategoryRepository categoryRepository;
 
     private final QuestionMapper questionMapper;
+    private final QuestionMapperApi questionMapperApi;
 
     @Transactional(readOnly = true)
     public List<Question> getQuestions() {
-        return questionRepository.findAll();
+      return questionRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<QuestionApiDto> getQuestionsForApi() {
+      List<Question> questions = questionRepository.findAll();
+      return questionMapperApi.mapDtoList(questions);
+    }
+
 
     @Transactional(readOnly = true)
     public Question getQuestion(UUID id) {

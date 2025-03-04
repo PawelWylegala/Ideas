@@ -7,10 +7,11 @@ import pl.wylegala.ideas.question.domein.model.Answer;
 import pl.wylegala.ideas.question.domein.model.Question;
 import pl.wylegala.ideas.question.domein.repository.AnswerRepository;
 import pl.wylegala.ideas.question.domein.repository.QuestionRepository;
+import pl.wylegala.ideas.question.dto.AnswerDto;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,37 +19,45 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
+    private final AnswerMapper answerMapper;
 
 
     @Transactional(readOnly = true)
-    public List<Answer> getAnswers(UUID questionId) {
-        return answerRepository.findByQuestionId(questionId);
+    public List<AnswerDto> getAnswers(UUID questionId) {
+        return answerRepository.findByQuestionId(questionId)
+                .stream()
+                .map(answerMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Answer getAnswer(UUID id) {
-        return answerRepository.getAnswerById(id);
+    public AnswerDto getAnswer(UUID id) {
+        Answer answer = answerRepository.getReferenceById(id);
+        return answerMapper.mapToDto(answer);
     }
 
     @Transactional
-    public Answer updateAnswer(UUID answerId, Answer answerRequest) {
-        Answer answer = answerRepository.getAnswerById(answerId);
+    public AnswerDto updateAnswer(UUID answerId, AnswerDto answerRequest) {
+        Answer answer = answerRepository.getReferenceById(answerId);
         answer.setName(answerRequest.getName());
 
-        return answerRepository.save(answer);
+        Answer savedAnswer = answerRepository.save(answer);
+
+        return answerMapper.mapToDto(savedAnswer);
     }
 
     @Transactional
-    public Answer createAnswer(UUID questionId, Answer answerRequest) {
+    public AnswerDto createAnswer(UUID questionId, AnswerDto answerRequest) {
         Answer answer = new Answer();
         answer.setName(answerRequest.getName());
 
-        Question question = questionRepository.getById(questionId);
+        Question question = questionRepository.getReferenceById(questionId);
         question.addAnswer(answer);
 
-        answerRepository.save(answer);
+        Answer savedAnswer = answerRepository.save(answer);
+
         questionRepository.save(question);
-        return answer;
+        return answerMapper.mapToDto(savedAnswer);
     }
 
     @Transactional

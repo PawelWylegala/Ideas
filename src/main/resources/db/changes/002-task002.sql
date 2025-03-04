@@ -15,7 +15,7 @@ insert into answers (id, name, question_id) values
 	(gen_random_uuid(), 'Groch', (select id from questions where name = 'Jakie są najzdrowsze warzywa?'));
 
 insert into answers (id, name, question_id) values
-	(gen_random_uuid(), 'Gdańsk', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje z Polsce')),
-	(gen_random_uuid(), 'Bieszczady', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje z Polsce')),
-	(gen_random_uuid(), 'Mazury', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje z Polsce'));
+	(gen_random_uuid(), 'Gdańsk', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje w Polsce')),
+	(gen_random_uuid(), 'Bieszczady', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje w Polsce')),
+	(gen_random_uuid(), 'Mazury', (select id from questions where name = 'Gdzie najlepiej spędzić wakacje w Polsce'));
 

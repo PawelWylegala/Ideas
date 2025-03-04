@@ -1,10 +1,6 @@
 package pl.wylegala.ideas.category.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -13,17 +9,16 @@ import lombok.ToString;
 import pl.wylegala.ideas.question.domein.model.Answer;
 import pl.wylegala.ideas.question.domein.model.Question;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 
 @Entity
 @Table(name = "categories")
 @Getter
 @Setter
-@ToString
 public class Category {
 
     @Id
@@ -33,9 +28,13 @@ public class Category {
     @Size(min = 3,max = 255)
     private String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private List<Question> questions;
+
+    @OneToMany(
+            mappedBy = "category",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY
+    )
+    private Set<Question> questions;
 
     public Category() {
         this.id = UUID.randomUUID();
@@ -46,13 +45,5 @@ public class Category {
         this.id = UUID.randomUUID();
     }
 
-    public List<Answer> getAnswers() {
-        if (questions == null) {
-            return Collections.emptyList();
-        }
-        return questions.stream()
-                .flatMap(q -> q.getAnswers().stream())
-                .collect(Collectors.toList());
-    }
 
 }

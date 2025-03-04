@@ -1,8 +1,6 @@
 package pl.wylegala.ideas.question.domein.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,22 +16,20 @@ import java.util.*;
 @ToString
 public class Question {
 
-
     @Id
     private UUID id;
 
     private String name;
 
-    private LocalDateTime created;
-
-    private LocalDateTime modified;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
-
-
 
     @OneToMany(mappedBy = "question")
     private Set<Answer> answers;
+
+    private LocalDateTime created;
+
+    private LocalDateTime modified;
 
     public Question() {
         this.id = UUID.randomUUID();
@@ -42,7 +38,6 @@ public class Question {
     public Question(String name) {
         this();
         this.name = name;
-
     }
 
     @PrePersist
@@ -60,10 +55,10 @@ public class Question {
         if (answers == null) {
             answers = new LinkedHashSet<>();
         }
+
         answer.setQuestion(this);
         answers.add(answer);
 
         return this;
     }
-
 }
