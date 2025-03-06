@@ -14,9 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.wylegala.ideas.category.domain.model.Category;
+import pl.wylegala.ideas.category.dto.CategoryDto;
+import pl.wylegala.ideas.category.service.CategoryMapper;
 import pl.wylegala.ideas.category.service.CategoryService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,17 +37,29 @@ class CategoryApiControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private CategoryService categoryService;
-    private PageImpl<Category> page;
+    @MockBean
+    private CategoryMapper categoryMapper;
+
+    private PageImpl<CategoryDto> page;
     private Category category;
+    private CategoryDto categoryDto;
 
     @BeforeEach
     void setUp() {
         category = new Category("Category");
-        page = new PageImpl<>(
-                List.of(new Category("Category1"), new Category("Category2"), new Category("Category3"))
-        );
+
+        categoryDto =new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+
+        List<Category> categories = List.of(new Category("Category1"), new Category("Category2"), new Category("Category3"));
+
+        List<CategoryDto> categoriesDto = categoryMapper.mapDtoList(categories);
+
+        page = new PageImpl<>(categoriesDto);
+
         when(categoryService.getCategories(any())).thenReturn(page);
-        when(categoryService.getCategory(category.getId())).thenReturn(category);
+        when(categoryService.getCategory(category.getId())).thenReturn(categoryDto);
 
         when(categoryService.createCategory(any())).thenAnswer(
                 (InvocationOnMock invocationOnMock) -> invocationOnMock.getArguments()[0]);
@@ -65,7 +81,7 @@ class CategoryApiControllerTest {
         mockMvc.perform(get("http://localhost:8080/api/v1/categories/{categoryId}",category.getId()))
                 .andExpect(status().isOk())
                 .andExpect(
-                        content().json(objectMapper.writeValueAsString(category))
+                        content().json(objectMapper.writeValueAsString(categoryDto))
                 );
     }
 
@@ -73,11 +89,11 @@ class CategoryApiControllerTest {
     void createdCategory() throws Exception {
         mockMvc.perform(post("http://localhost:8080/api/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(category))
+                        .content(objectMapper.writeValueAsString(categoryDto))
                 )
                 .andExpect(status().isCreated())
                 .andExpect(
-                        content().json(objectMapper.writeValueAsString(category))
+                        content().json(objectMapper.writeValueAsString(categoryDto))
                 );
 
     }
@@ -86,17 +102,17 @@ class CategoryApiControllerTest {
     void shouldUpdateCategory() throws Exception {
         mockMvc.perform(put("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
         .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(category))
+                .content(objectMapper.writeValueAsString(categoryDto))
         )
                 .andExpect(status().isAccepted())
-                .andExpect(content().json(objectMapper.writeValueAsString(category)));
+                .andExpect(content().json(objectMapper.writeValueAsString(categoryDto)));
     }
 
     @Test
     void deleteCategory()throws Exception {
         mockMvc.perform(delete("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(category))
+                .content(objectMapper.writeValueAsString(categoryDto))
         )
                 .andExpect(status().isNoContent());
 

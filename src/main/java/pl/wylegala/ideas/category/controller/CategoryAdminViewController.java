@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.wylegala.ideas.category.domain.model.Category;
+import pl.wylegala.ideas.category.dto.CategoryDto;
 import pl.wylegala.ideas.category.service.CategoryService;
 import pl.wylegala.ideas.common.controller.ControllerUtils;
 import pl.wylegala.ideas.common.dto.Message;
@@ -53,7 +54,7 @@ public class CategoryAdminViewController {
             reverseSort = "asc";
         }
 
-        Page<Category> categoriesPage = categoryService.getCategories(search, pageable);
+        Page<CategoryDto> categoriesPage = categoryService.getCategories(search, pageable);
         model.addAttribute("categoriesPage", categoriesPage);
         model.addAttribute("search", search);
         model.addAttribute("reverseSort", reverseSort);
@@ -73,7 +74,7 @@ public class CategoryAdminViewController {
     @PostMapping("{id}")
     public String edit(
             @PathVariable UUID id,
-            @Valid @ModelAttribute("category") Category category,
+            @Valid @ModelAttribute("category") CategoryDto category,
             BindingResult bindingResult,
             RedirectAttributes ra,
             Model model

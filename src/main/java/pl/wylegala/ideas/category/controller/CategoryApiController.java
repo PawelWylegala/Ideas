@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.wylegala.ideas.category.domain.model.Category;
+import pl.wylegala.ideas.category.dto.CategoryDto;
 import pl.wylegala.ideas.category.service.CategoryService;
 
 
@@ -20,27 +21,26 @@ public class CategoryApiController {
 
 
     @GetMapping
-    Page<Category> getCategories(Pageable pageable){
+    Page<CategoryDto> getCategories(Pageable pageable){
         return categoryService.getCategories(pageable);
     }
 
     @GetMapping("{id}")
-    Category getCategory(@PathVariable UUID id){
+    CategoryDto getCategory(@PathVariable UUID id){
         return categoryService.getCategory(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Category createdCategory(@RequestBody Category category){
-        return categoryService.createCategory(category);
+    CategoryDto createdCategory(@RequestBody CategoryDto categoryDto){
+        return categoryService.createCategory(categoryDto);
     }
 
 
     @PutMapping("{id}")
-
     @ResponseStatus(HttpStatus.ACCEPTED)
-    Category updateCategory(@PathVariable UUID id, @RequestBody Category category){
-        return categoryService.updateCategory(id, category);
+    CategoryDto updateCategory(@PathVariable UUID id, @RequestBody CategoryDto categoryDto){
+        return categoryService.updateCategory(id, categoryDto);
     }
 
     @DeleteMapping("{id}")

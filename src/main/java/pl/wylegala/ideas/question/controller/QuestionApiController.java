@@ -1,11 +1,11 @@
 package pl.wylegala.ideas.question.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.wylegala.ideas.question.dto.QuestionApiDto;
-import pl.wylegala.ideas.question.service.QuestionService;
 import pl.wylegala.ideas.question.domein.model.Question;
+import pl.wylegala.ideas.question.dto.QuestionDto;
+import pl.wylegala.ideas.question.service.QuestionMapper;
+import pl.wylegala.ideas.question.service.QuestionService;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,45 +14,41 @@ import java.util.UUID;
 @RequestMapping("api/v1/questions")
 public class QuestionApiController {
 
-    private QuestionService questionService;
+	private final QuestionService questionsService;
+	private final QuestionMapper questionMapper;
 
-    @Autowired
-    public QuestionApiController(QuestionService questionService) {
-        this.questionService = questionService;
+	public QuestionApiController(QuestionService questionsService, QuestionMapper questionMapper) {
+		this.questionsService = questionsService;
+        this.questionMapper = questionMapper;
     }
 
-    @GetMapping
-    List<QuestionApiDto> getQuestions() {
+	@GetMapping
+	List<QuestionDto> getQuestions(){
+		return questionsService.getQuestions();
+	}
 
-        return questionService.getQuestionsForApi();
-    }
+	@GetMapping("{id}")
+	QuestionDto getQuestion(@PathVariable UUID id){
+		return questionsService.getQuestion(id);
 
-    @GetMapping("{id}")
-    Question getQuestion(@PathVariable UUID id) {
-        return questionService.getQuestion(id);
-    }
+	}
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    Question createQuestion(@RequestBody Question question){
-        return questionService.createQuestion(question);
-    }
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	QuestionDto createQuestion(@RequestBody QuestionDto questionDto) {
+		return questionsService.createQuestion(questionDto);
+	}
 
-    @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    Question updateQuestion(@PathVariable UUID id, @RequestBody Question question){
-        return questionService.updateQuestion(id,question);
-    }
+	@PutMapping("{id}")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	QuestionDto updateQuestion(@PathVariable UUID id, @RequestBody QuestionDto question){
+	return questionsService.updateQuestion(id, question);
 
+	}
 
-@DeleteMapping("{id}")
-@ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteQuestion(@PathVariable UUID id){
-        questionService.deleteQuestion(id);
-    }
-
-
-
-
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@DeleteMapping("{id}")
+	void deleteQuestion(@PathVariable UUID id){
+		questionsService.deleteQuestion(id);
+	}
 }
-

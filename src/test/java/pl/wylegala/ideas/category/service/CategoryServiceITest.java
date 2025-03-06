@@ -5,12 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pl.wylegala.ideas.category.domain.model.Category;
 import pl.wylegala.ideas.category.domain.repository.CategoryRepository;
+import pl.wylegala.ideas.category.dto.CategoryDto;
 import pl.wylegala.ideas.question.domein.repository.AnswerRepository;
 import pl.wylegala.ideas.question.domein.repository.QuestionRepository;
 
@@ -33,6 +35,8 @@ class CategoryServiceITest {
     QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @MockBean
+    CategoryMapper categoryMapper;
 
     @BeforeEach
     void setUp() {
@@ -55,12 +59,12 @@ class CategoryServiceITest {
 
 
         // when
-        Page<Category> categories = categoryService.getCategories(Pageable.unpaged());
+        Page<CategoryDto> categories = categoryService.getCategories(Pageable.unpaged());
 
         // then
         assertThat(categories)
                 .hasSize(3)
-                .extracting(Category::getName)
+                .extracting(CategoryDto::getName)
                 .containsExactlyInAnyOrder("Category 1", "Category 2", "Category 3");
     }
 
@@ -72,7 +76,7 @@ class CategoryServiceITest {
         UUID categoryId = category.getId();
 
         //when
-        Category result = categoryService.getCategory(categoryId);
+        CategoryDto result = categoryService.getCategory(categoryId);
 
         //then
         assertThat(result.getId()).isEqualTo(categoryId);
@@ -82,11 +86,13 @@ class CategoryServiceITest {
     @Test
     void shouldCreateCategory() {
         //given
-        Category requestCategory = new Category("Category 1");
+        Category category = new Category("Category 1");
+
+        CategoryDto requestCategory = categoryMapper.mapDto(category);
 
 
         //when
-        Category result = categoryService.createCategory(requestCategory);
+        CategoryDto result = categoryService.createCategory(requestCategory);
 
         //then
         assertThat(result.getName()).isEqualTo(requestCategory.getName());
@@ -101,12 +107,12 @@ class CategoryServiceITest {
                 new Category("Category2")
         );
         UUID id = categories.getFirst().getId();
-        Category categoryRequest = categories.getLast();
+        CategoryDto categoryRequest = categoryMapper.mapDto(categories.getLast());
         categoryRepository.saveAll(categories);
 
 
         //when
-        Category result  = categoryService.updateCategory(id,categoryRequest);
+        CategoryDto result  = categoryService.updateCategory(id,categoryRequest);
         //then
 
         assertThat(result.getName()).isEqualTo(categories.getLast().getName());

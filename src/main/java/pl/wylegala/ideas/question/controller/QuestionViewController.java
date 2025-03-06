@@ -12,6 +12,7 @@ import pl.wylegala.ideas.IdeasConfiguration;
 import pl.wylegala.ideas.category.service.CategoryService;
 import pl.wylegala.ideas.common.controller.IdeasCommonViewController;
 import pl.wylegala.ideas.question.domein.model.Question;
+import pl.wylegala.ideas.question.dto.QuestionDto;
 import pl.wylegala.ideas.question.service.AnswerService;
 import pl.wylegala.ideas.question.service.QuestionService;
 
@@ -58,7 +59,7 @@ public class QuestionViewController extends IdeasCommonViewController {
     }
 
     @PostMapping
-    public String add(@ModelAttribute Question question){
+    public String add(@ModelAttribute QuestionDto question){
         questionService.createQuestion(question);
         return "redirect:/questions";
     }

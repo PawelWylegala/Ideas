@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.wylegala.ideas.category.domain.model.Category;
+import pl.wylegala.ideas.category.dto.CategoryDto;
 import pl.wylegala.ideas.category.service.CategoryService;
 import pl.wylegala.ideas.common.controller.IdeasCommonViewController;
 import pl.wylegala.ideas.question.domein.model.Question;
@@ -28,7 +29,7 @@ public class CategoryViewController extends IdeasCommonViewController {
 
     @GetMapping("{id}")
     public String singleView(@PathVariable UUID id, Model model){
-        Category category = categoryService.getCategory(id);
+        CategoryDto category = categoryService.getCategory(id);
         List<Question> questions = questionService.findAllByCategoryId(id);
 
         model.addAttribute("category", category);

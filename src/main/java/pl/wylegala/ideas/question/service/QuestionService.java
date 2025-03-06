@@ -8,11 +8,9 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.wylegala.ideas.category.domain.repository.CategoryRepository;
 import pl.wylegala.ideas.common.dto.StatisticsDto;
 import pl.wylegala.ideas.question.domein.model.Question;
 import pl.wylegala.ideas.question.domein.repository.QuestionRepository;
-import pl.wylegala.ideas.question.dto.QuestionApiDto;
 import pl.wylegala.ideas.question.dto.QuestionDto;
 
 
@@ -28,42 +26,38 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     private final QuestionMapper questionMapper;
-    private final QuestionMapperApi questionMapperApi;
 
     @Transactional(readOnly = true)
-    public List<Question> getQuestions() {
-      return questionRepository.findAll();
-    }
+    public List<QuestionDto> getQuestions() {
+        List<Question> questions = questionRepository.findAll();
+        return questionMapper.mapDtoList(questions);
 
-    @Transactional(readOnly = true)
-    public List<QuestionApiDto> getQuestionsForApi() {
-      List<Question> questions = questionRepository.findAll();
-      return questionMapperApi.mapDtoList(questions);
     }
 
 
     @Transactional(readOnly = true)
-    public Question getQuestion(UUID id) {
-        return questionRepository.getReferenceById(id);
-    }
-
-    @Transactional
-    public Question createQuestion(Question questionRequest) {
-        Question question = new Question();
-
-        question.setName(questionRequest.getName());
-
-        return questionRepository.save(question);
-    }
-
-
-    @Transactional
-    public Question updateQuestion(UUID id, Question questionRequest) {
+    public QuestionDto getQuestion(UUID id) {
         Question question = questionRepository.getReferenceById(id);
+        return questionMapper.mapDto(question);
+    }
 
-        question.setName(questionRequest.getName());
 
-        return questionRepository.save(question);
+    @Transactional
+    public QuestionDto createQuestion(QuestionDto questionRequestDto) {
+        Question question = questionMapper.mapEntity(questionRequestDto);
+
+        Question savedQuestion = questionRepository.save(question);
+
+        return questionMapper.mapDto(savedQuestion);
+    }
+
+
+    @Transactional
+    public QuestionDto updateQuestion(UUID id, QuestionDto questionRequestDto) {
+        Question existingQuestion = questionMapper.mapEntity(questionRequestDto);
+        existingQuestion.setName(questionRequestDto.getName());
+        Question savedQuestion = questionRepository.save(existingQuestion);
+        return questionMapper.mapDto(savedQuestion);
     }
 
     @Transactional
@@ -94,7 +88,7 @@ public class QuestionService {
     public List<QuestionDto> findTop(int limit) {
         return questionRepository.findAll(PageRequest.of(0, limit))
                 .get()
-                .map(questionMapper::map)
+                .map(questionMapper::mapDto)
                 .collect(Collectors.toList());
     }
 
@@ -102,7 +96,7 @@ public class QuestionService {
     public List<QuestionDto> findTop(UUID categoryId, int limit) {
         return questionRepository.findAllByCategoryId(categoryId, PageRequest.of(0, limit))
                 .stream()
-                .map(questionMapper::map)
+                .map(questionMapper::mapDto)
                 .collect(Collectors.toList());
     }
 
@@ -110,7 +104,7 @@ public class QuestionService {
     public List<QuestionDto> findRandom(int limit) {
         return questionRepository.findRandomQuestions(limit)
                 .stream()
-                .map(questionMapper::map)
+                .map(questionMapper::mapDto)
                 .collect(Collectors.toList());
     }
 
