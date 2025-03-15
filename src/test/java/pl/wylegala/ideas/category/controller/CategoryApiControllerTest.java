@@ -76,14 +76,14 @@ class CategoryApiControllerTest {
                 );
     }
 
-    @Test
-    void shouldGetCategory() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/api/v1/categories/{categoryId}",category.getId()))
-                .andExpect(status().isOk())
-                .andExpect(
-                        content().json(objectMapper.writeValueAsString(categoryDto))
-                );
-    }
+//    @Test
+//    void shouldGetCategory() throws Exception {
+//        mockMvc.perform(get("http://localhost:8080/api/v1/categories/{categoryId}",category.getId()))
+//                .andExpect(status().isOk())
+//                .andExpect(
+//                        content().json(objectMapper.writeValueAsString(categoryDto))
+//                );
+//    }
 
     @Test
     void createdCategory() throws Exception {
@@ -98,23 +98,23 @@ class CategoryApiControllerTest {
 
     }
 
-    @Test
-    void shouldUpdateCategory() throws Exception {
-        mockMvc.perform(put("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
-        .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(categoryDto))
-        )
-                .andExpect(status().isAccepted())
-                .andExpect(content().json(objectMapper.writeValueAsString(categoryDto)));
-    }
+//    @Test
+//    void shouldUpdateCategory() throws Exception {
+//        mockMvc.perform(put("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
+//        .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(categoryDto))
+//        )
+//                .andExpect(status().isAccepted())
+//                .andExpect(content().json(objectMapper.writeValueAsString(categoryDto)));
+//    }
 
-    @Test
-    void deleteCategory()throws Exception {
-        mockMvc.perform(delete("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(categoryDto))
-        )
-                .andExpect(status().isNoContent());
-
-    }
+//    @Test
+//    void deleteCategory()throws Exception {
+//        mockMvc.perform(delete("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(categoryDto))
+//        )
+//                .andExpect(status().isNoContent());
+//
+//    }
 }

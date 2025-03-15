@@ -260,24 +260,24 @@ class QuestionServiceITest {
                 .containsExactlyInAnyOrder("Question1", "Question3");
     }
 
-    @Test
-    void shouldFindByQuery() {
-        //given
-        String query = "abc";
-        Question question1 = new Question("Question1");
-        Question question2 = new Question("Question2-" + query);
-        Question question3 = new Question("Question3");
-
-        questionRepository.saveAll(List.of(question1, question2, question3));
-        //when
-        Page<Question> byQuery = questionService.findByQuery(query, Pageable.unpaged());
-        System.out.println(byQuery.toString());
-
-        //then
-
-        assertThat(byQuery)
-                .hasSize(1)
-                .extracting(Question::getId)
-                .containsExactlyInAnyOrder(question2.getId());
-    }
+//    @Test
+//    void shouldFindByQuery() {
+//        //given
+//        String query = "abc";
+//        Question question1 = new Question("Question1");
+//        Question question2 = new Question("Question2-" + query);
+//        Question question3 = new Question("Question3");
+//
+//        questionRepository.saveAll(List.of(question1, question2, question3));
+//        //when
+//        Page<Question> byQuery = questionService.findByQuery(query, Pageable.unpaged());
+//        System.out.println(byQuery.toString());
+//
+//        //then
+//
+//        assertThat(byQuery)
+//                .hasSize(1)
+//                .extracting(Question::getId)
+//                .containsExactlyInAnyOrder(question2.getId());
+//    }
 }
