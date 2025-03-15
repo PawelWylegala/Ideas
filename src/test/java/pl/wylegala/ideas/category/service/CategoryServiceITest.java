@@ -35,7 +35,7 @@ class CategoryServiceITest {
     QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
-    @MockBean
+    @Autowired
     CategoryMapper categoryMapper;
 
     @BeforeEach
@@ -51,18 +51,19 @@ class CategoryServiceITest {
 
         // given
 
-        categoryRepository.saveAll(List.of(
+//        List<Category> categories =
+                categoryRepository.saveAll(List.of(
                 new Category("Category 1"),
                 new Category("Category 2"),
                 new Category("Category 3")
         ));
 
-
         // when
-        Page<CategoryDto> categories = categoryService.getCategories(Pageable.unpaged());
+        Page<CategoryDto> categoriesPage = categoryService.getCategories(Pageable.unpaged());
+
 
         // then
-        assertThat(categories)
+        assertThat(categoriesPage)
                 .hasSize(3)
                 .extracting(CategoryDto::getName)
                 .containsExactlyInAnyOrder("Category 1", "Category 2", "Category 3");
@@ -75,8 +76,9 @@ class CategoryServiceITest {
         Category category = categoryRepository.save(new Category("Category 1"));
         UUID categoryId = category.getId();
 
+
         //when
-        CategoryDto result = categoryService.getCategory(categoryId);
+        CategoryDto result = categoryService.getCategory(category.getId());
 
         //then
         assertThat(result.getId()).isEqualTo(categoryId);
@@ -88,7 +90,8 @@ class CategoryServiceITest {
         //given
         Category category = new Category("Category 1");
 
-        CategoryDto requestCategory = categoryMapper.mapDto(category);
+       categoryRepository.save(category);
+       CategoryDto requestCategory = categoryService.getCategory(category.getId());
 
 
         //when
@@ -96,7 +99,7 @@ class CategoryServiceITest {
 
         //then
         assertThat(result.getName()).isEqualTo(requestCategory.getName());
- assertThat(result.getName()).isEqualTo(categoryRepository.getReferenceById(result.getId()).getName());
+        assertThat(result.getName()).isEqualTo(categoryRepository.getReferenceById(result.getId()).getName());
     }
 
     @Test
@@ -112,7 +115,7 @@ class CategoryServiceITest {
 
 
         //when
-        CategoryDto result  = categoryService.updateCategory(id,categoryRequest);
+        CategoryDto result = categoryService.updateCategory(id, categoryRequest);
         //then
 
         assertThat(result.getName()).isEqualTo(categories.getLast().getName());
@@ -127,7 +130,7 @@ class CategoryServiceITest {
         Category category = categoryRepository.save(new Category("Category 1"));
 
         //when
-        Throwable throwable = catchThrowable(()-> categoryService.deleteCategory(category.getId()));
+        Throwable throwable = catchThrowable(() -> categoryService.deleteCategory(category.getId()));
 
         //then
 

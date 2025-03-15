@@ -57,6 +57,7 @@ public class CategoryService {
     public CategoryDto updateCategory(UUID id, CategoryDto categoryDtoRequest) {
         Category existingCategory = categoryRepository.getReferenceById(id);
         existingCategory.setName(categoryDtoRequest.getName());
+
         Category savedCategory = categoryRepository.save(existingCategory);
         return categoryMapper.mapDto(savedCategory);
     }

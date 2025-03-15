@@ -19,6 +19,7 @@ import java.util.UUID;
 @Table(name = "categories")
 @Getter
 @Setter
+@ToString
 public class Category {
 
     @Id
@@ -29,21 +30,22 @@ public class Category {
     private String name;
 
 
+    public Category() {
+        this.id = UUID.randomUUID();
+    }
+
+    public Category(String name) {
+        this();
+        this.name = name;
+
+    }
+
     @OneToMany(
             mappedBy = "category",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     private Set<Question> questions;
-
-    public Category() {
-        this.id = UUID.randomUUID();
-    }
-
-    public Category(String name) {
-        this.name = name;
-        this.id = UUID.randomUUID();
-    }
 
 
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.wylegala.ideas.IdeasConfiguration;
-import pl.wylegala.ideas.category.service.CategoryService;
 import pl.wylegala.ideas.common.controller.IdeasCommonViewController;
 import pl.wylegala.ideas.question.domein.model.Question;
 import pl.wylegala.ideas.question.dto.QuestionDto;

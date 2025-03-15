@@ -2,6 +2,7 @@ package pl.wylegala.ideas.question.service;
 
 
 import org.springframework.stereotype.Component;
+import pl.wylegala.ideas.category.domain.model.Category;
 import pl.wylegala.ideas.question.domein.model.Question;
 import pl.wylegala.ideas.question.dto.QuestionDto;
 
@@ -15,6 +16,7 @@ public class QuestionMapper {
         QuestionDto questionDto = new QuestionDto();
         questionDto.setId(question.getId());
         questionDto.setName(question.getName());
+
         questionDto.setCategoryId(question.getCategory().getId());
         questionDto.setCategoryName(question.getCategory().getName());
         questionDto.setAnswers(question.getAnswers() == null ? 0 : question.getAnswers().size());
@@ -31,6 +33,12 @@ public class QuestionMapper {
 
     public Question mapEntity(QuestionDto questionDto) {
         Question question = new Question();
+        Category category = new Category();
+
+        category.setId(questionDto.getCategoryId());
+        category.setName(questionDto.getCategoryName());
+
+        question.setCategory(category);
         question.setId(questionDto.getId());
         question.setName(questionDto.getName());
         question.setCreated(questionDto.getCreated());
