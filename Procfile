@@ -1,0 +1,1 @@
+java -jar -Dserver.port=$PORT target/${project.build.finalName}.jar

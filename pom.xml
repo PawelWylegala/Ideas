@@ -140,9 +140,9 @@
 				<artifactId>heroku-maven-plugin</artifactId>
 				<version>3.0.2</version>
 				<configuration>
-					<appName>ideaspawel</appName>
+					<appName>ideas-pawel</appName>
 					<processTypes>
-					<web>java -jar -Dserver.port=$PORT target/${project.build.finalName}</web>
+					<web>java -jar -Dserver.port=$PORT target/${project.build.finalName}.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>
