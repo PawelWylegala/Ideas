@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -59,7 +60,7 @@ class CategoryApiControllerTest {
         page = new PageImpl<>(categoriesDto);
 
         when(categoryService.getCategories(any())).thenReturn(page);
-        when(categoryService.getCategory(category.getId())).thenReturn(categoryDto);
+        when(categoryService.getCategory(categoryDto.getId())).thenReturn(categoryDto);
 
         when(categoryService.createCategory(any())).thenAnswer(
                 (InvocationOnMock invocationOnMock) -> invocationOnMock.getArguments()[0]);
@@ -76,14 +77,14 @@ class CategoryApiControllerTest {
                 );
     }
 
-//    @Test
-//    void shouldGetCategory() throws Exception {
-//        mockMvc.perform(get("http://localhost:8080/api/v1/categories/{categoryId}",category.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(
-//                        content().json(objectMapper.writeValueAsString(categoryDto))
-//                );
-//    }
+    @Test
+    void shouldGetCategory() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/api/v1/categories/{categoryId}", categoryDto.getId()))
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().json(objectMapper.writeValueAsString(categoryDto))
+                );
+    }
 
     @Test
     void createdCategory() throws Exception {
@@ -98,23 +99,19 @@ class CategoryApiControllerTest {
 
     }
 
-//    @Test
-//    void shouldUpdateCategory() throws Exception {
-//        mockMvc.perform(put("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
-//        .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(categoryDto))
-//        )
-//                .andExpect(status().isAccepted())
-//                .andExpect(content().json(objectMapper.writeValueAsString(categoryDto)));
-//    }
+    @Test
+    void shouldUpdateCategory() throws Exception {
+        mockMvc.perform(put("http://localhost:8080/api/v1/categories/{categoryId}",categoryDto.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(category))
+        )
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(objectMapper.writeValueAsString(categoryDto)));
+    }
 
-//    @Test
-//    void deleteCategory()throws Exception {
-//        mockMvc.perform(delete("http://localhost:8080/api/v1/categories/{categoryId}",category.getId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(categoryDto))
-//        )
-//                .andExpect(status().isNoContent());
-//
-//    }
+    @Test
+    void shouldDeleteCategory() throws Exception {
+        mockMvc.perform(delete("http://localhost:8080/api/v1/categories/{categoryId}", category.getId()))
+                .andExpect(status().isNoContent());
+    }
 }

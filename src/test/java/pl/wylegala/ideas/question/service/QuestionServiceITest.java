@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.WebContentGenerator;
 import pl.wylegala.ideas.category.domain.model.Category;
 import pl.wylegala.ideas.category.domain.repository.CategoryRepository;
 import pl.wylegala.ideas.category.dto.CategoryDto;
@@ -260,24 +259,28 @@ class QuestionServiceITest {
                 .containsExactlyInAnyOrder("Question1", "Question3");
     }
 
-//    @Test
-//    void shouldFindByQuery() {
-//        //given
-//        String query = "abc";
-//        Question question1 = new Question("Question1");
-//        Question question2 = new Question("Question2-" + query);
-//        Question question3 = new Question("Question3");
-//
-//        questionRepository.saveAll(List.of(question1, question2, question3));
-//        //when
-//        Page<Question> byQuery = questionService.findByQuery(query, Pageable.unpaged());
-//        System.out.println(byQuery.toString());
-//
-//        //then
-//
-//        assertThat(byQuery)
-//                .hasSize(1)
-//                .extracting(Question::getId)
-//                .containsExactlyInAnyOrder(question2.getId());
-//    }
+    @Test
+    void shouldFindByQuery() {
+        // given
+        String query = "abc";
+        Question question1 = new Question("Question1");
+        Question question2 = new Question("Question2-" + query);
+        Question question3 = new Question("Question3");
+
+        Category category = categoryRepository.save(new Category("Category"));
+        question1.setCategory(category);
+        question2.setCategory(category);
+        question3.setCategory(category);
+
+        questionRepository.saveAll(List.of(question1, question2, question3));
+
+        // when
+        Page<Question> byQuery = questionService.findByQuery(query, Pageable.unpaged());
+
+        // then
+        assertThat(byQuery)
+                .hasSize(1)
+                .extracting(Question::getId)
+                .containsExactlyInAnyOrder(question2.getId());
+    }
 }

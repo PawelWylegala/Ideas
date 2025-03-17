@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.wylegala.ideas.common.dto.StatisticsDto;
 import pl.wylegala.ideas.question.domein.model.Question;
@@ -32,7 +33,7 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
             countQuery = "select count(*) from questions q where upper(q.name) like upper('%' || :query || '%') ",
             nativeQuery = true
     )
-    Page<Question> findByQuery(String query, Pageable pageable);
+    Page<Question> findByQuery(@Param("query") String query, Pageable pageable);
 
     @Query(value = "select * from questions q order by random() limit :limit", nativeQuery = true)
     List<Question> findRandomQuestions(int limit);

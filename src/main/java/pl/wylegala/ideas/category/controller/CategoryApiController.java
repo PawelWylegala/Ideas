@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.wylegala.ideas.category.domain.model.Category;
+
 import pl.wylegala.ideas.category.dto.CategoryDto;
 import pl.wylegala.ideas.category.service.CategoryService;
 
