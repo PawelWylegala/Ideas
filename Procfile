@@ -1,1 +1,1 @@
-java -jar -Dserver.port=$PORT target/${project.build.finalName}.jar
+web: java -jar -Dserver.port=$PORT target/idea-0.0.1-SNAPSHOT.jar

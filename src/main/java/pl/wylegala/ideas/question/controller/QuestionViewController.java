@@ -52,7 +52,7 @@ public class QuestionViewController extends IdeasCommonViewController {
 
     @GetMapping("add")
     public String addView(Model model){
-        model.addAttribute("question", new Question());
+        model.addAttribute("question", new QuestionDto());
 
         return "question/add";
     }
